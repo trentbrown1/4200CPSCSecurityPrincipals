@@ -34,15 +34,14 @@ def main():
     #
     # TODO: Modify the URL
     #
-    m = quote(url) # .encode() converts str to bytes
-    h1 = sha256()
-    h1.update(m)
-    padded_message_len = len(m) + len(padding(len(m)))
-    h2 = sha256(
-    state=bytes.fromhex(h1.hexdigest()),
-    count=padded_message_len,
-    )
-    url.token = 'daa8921e8feb2d610cf0658a50ce532f345b5f1fda9263c9d549e89daffeae9b'
+    print(url.token)
+    print(url.suffix)
+
+    padded_message_len = 8 + len(url.suffix)
+    h2 = sha256(state=bytes.fromhex(url.token),count=padded_message_len,)
+    x = quote("&command=UnlocksSafes")
+    h2.update(x)
+    url.token = url.token # + padding and suffix?
     url.suffix += '&command=UnlockSafes'
 
     print(url)
