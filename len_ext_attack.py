@@ -34,12 +34,19 @@ def main():
     #
     # TODO: Modify the URL
     #
+    x = quote("&command=UnlocksSafes")
+    orig_message = url.suffix.encode()
+    pad = padding(len(orig_message) + 32)
+
+    ext_message = orig_message + pad + x
+  
+   
     print(url.token)
     print(url.suffix)
 
-    padded_message_len = 8 + len(url.suffix)
+    padded_message_len = len(orig_message) + len(pad)
     h2 = sha256(state=bytes.fromhex(url.token),count=padded_message_len,)
-    x = quote("&command=UnlocksSafes")
+   
     h2.update(x)
     url.token = url.token # + padding and suffix?
     url.suffix += '&command=UnlockSafes'
