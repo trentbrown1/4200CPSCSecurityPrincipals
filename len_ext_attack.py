@@ -37,15 +37,21 @@ def main():
     print(url.token)
     print(url.suffix)
 
-    padded_message_len = 8 + len(padding(len(url.suffix)))
-    h1 = sha256(state=bytes.fromhex(url.token),count=padded_message_len,)
-    x = quote("command=UnlocksSafes").encode()
-    h1.update(x)
+    orig_msg = url.suffix.encode()
+    orig_len = len(orig_msg)
+
+    padded_message_len = orig_msg + padding(orig_len)
+
+    h1 = sha256(state=bytes.fromhex(url.token),count=len(padded_message_len))
+    
+    x = quote("command=UnlocksSafes")
+    h1.update(x.encode())
     # print(h2.hexdigest())
     newToken = h1.hexdigest()
     url.token = newToken # + padding and suffix?
-    url.suffix += '&command=UnlockSafes'
+    url.suffix += x
 
+    print(newToken)
     print(url)
 
 
